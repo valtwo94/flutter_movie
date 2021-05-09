@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_movie/components/list/movie_list.dart';
+import 'package:flutter_movie/components/shared/rating.dart';
+import 'package:flutter_movie/components/shared/tag.dart';
 import 'package:flutter_movie/components/text/Genre_text.dart';
 import 'package:flutter_movie/components/text/date_text.dart';
 import 'package:flutter_movie/components/text/title_text.dart';
@@ -191,33 +194,15 @@ class MovieDetailScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text(
-                          '영화제목',
-                          style: GoogleFonts.notoSans(
-                            fontWeight: FontWeight.w700,
-                          ),
+                        TitleText(
+                          title: '미드나이트 스카이',
+                          size: 12,
                         ),
                         SizedBox(
                           height: 4,
                         ),
-                        Container(
-                          width: 27,
-                          height: 12,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(2),
-                              border: Border.all(
-                                width: 1,
-                                color: Color.fromRGBO(246, 96, 96, 1),
-                              )),
-                          child: Center(
-                            child: Text(
-                              'Adult',
-                              style: GoogleFonts.notoSans(
-                                  color: Color.fromRGBO(246, 96, 96, 1),
-                                  fontSize: 7,
-                                  fontWeight: FontWeight.w700),
-                            ),
-                          ),
+                        Tag(
+                          text: 'Adult',
                         ),
                         SizedBox(
                           height: 4,
@@ -229,6 +214,12 @@ class MovieDetailScreen extends StatelessWidget {
                         DateText(
                           text: '2020-12-10 발매',
                           size: 11,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Rating(
+                          size: 15,
                         )
                       ],
                     )

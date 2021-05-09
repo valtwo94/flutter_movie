@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_movie/components/list/movie_list.dart';
+import 'package:flutter_movie/components/shared/rating.dart';
 import 'package:flutter_movie/components/text/title_text.dart';
 import 'package:flutter_movie/utils/shadow.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -58,7 +59,9 @@ class MovieListScreen extends StatelessWidget {
                                 SizedBox(
                                   height: 4,
                                 ),
-                                Rating()
+                                Rating(
+                                  size: 10,
+                                )
                               ],
                             ),
                           );

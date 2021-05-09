@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_movie/components/shared/rating.dart';
 import 'package:flutter_movie/components/text/date_text.dart';
 import 'package:flutter_movie/components/text/genre_text.dart';
 import 'package:flutter_movie/components/text/title_text.dart';
@@ -80,36 +81,6 @@ class MovieList extends StatelessWidget {
               })
         ],
       ),
-    );
-  }
-}
-
-class Rating extends StatelessWidget {
-  final double rating;
-  final double size;
-
-  const Rating({
-    Key key,
-    this.rating: 3,
-    this.size: 10,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return RatingBar.builder(
-      ignoreGestures: true,
-      initialRating: rating,
-      minRating: 0,
-      itemCount: 5,
-      itemPadding: EdgeInsets.symmetric(horizontal: 2.5),
-      direction: Axis.horizontal,
-      allowHalfRating: true,
-      itemBuilder: (context, _) => Icon(
-        Icons.star,
-        color: Colors.amber,
-      ),
-      itemSize: size,
-      onRatingUpdate: (rating) {},
     );
   }
 }
