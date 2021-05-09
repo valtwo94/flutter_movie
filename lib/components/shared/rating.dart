@@ -13,20 +13,16 @@ class Rating extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RatingBar.builder(
-      ignoreGestures: true,
-      initialRating: rating,
-      minRating: 0,
+    return RatingBarIndicator(
+      rating: rating / 2,
       itemCount: 5,
       itemPadding: EdgeInsets.only(right: 2.5),
       direction: Axis.horizontal,
-      allowHalfRating: true,
       itemBuilder: (context, _) => Icon(
         Icons.star,
         color: Colors.amber,
       ),
       itemSize: size,
-      onRatingUpdate: (rating) {},
     );
   }
 }
