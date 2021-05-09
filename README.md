@@ -8,7 +8,9 @@
 
 - [Google_Fonts](https://pub.dev/packages/google_fonts)
 
-- [Flutter_Rating_Bar]()
+- [Flutter_Rating_Bar](https://pub.dev/packages/flutter_rating_bar)
+
+- [flutter_config](https://pub.dev/packages/flutter_config)
 
 
 
@@ -30,6 +32,8 @@
 - [x] Provider 리팩토링
 
 - [ ] 에러 처리
+
+- [ ] .env API_KEY 등록(gitIgnore는 결과 나오고 나중에 하겠습니다.)
 
 ## 프로젝트 소감
 > 항상 firebase를 사용하다가 http 페이지네이션을 구현하게 되어 좋은 경험이 되었습니다.

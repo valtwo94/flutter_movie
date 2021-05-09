@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_config/flutter_config.dart';
 import 'package:flutter_movie/model/dto/now_playing_movie_data.dart';
 import 'package:flutter_movie/model/dto/popular_movie_data.dart';
 import 'package:flutter_movie/model/dto/top_rated_movie_data.dart';
@@ -26,7 +27,7 @@ class MovieProvider with ChangeNotifier {
   //상영중 영화
   Future<void> getNowPlayingLists() async {
     var url = Uri.parse(
-        'https://api.themoviedb.org/3/movie/now_playing?api_key=6253d9838a1066479c2287df95aeb78e&language=ko-KR&page=$_nowPlayingPageKey&region=KR');
+        'https://api.themoviedb.org/3/movie/now_playing?api_key=${FlutterConfig.get('API_KEY')}&language=ko-KR&page=$_nowPlayingPageKey&region=KR');
     var response = await http.get(url);
     Map<String, dynamic> jsonData = jsonDecode(response.body);
     NowPlayingMovieData data = NowPlayingMovieData.fromJson(jsonData);
@@ -42,7 +43,7 @@ class MovieProvider with ChangeNotifier {
   //개봉 예정 영화
   Future<void> getUpcomingLists() async {
     var url = Uri.parse(
-        'https://api.themoviedb.org/3/movie/upcoming?api_key=6253d9838a1066479c2287df95aeb78e&language=ko-KR&page=$_upcomingPageKey&region=KR');
+        'https://api.themoviedb.org/3/movie/upcoming?api_key=${FlutterConfig.get('API_KEY')}&language=ko-KR&page=$_upcomingPageKey&region=KR');
     var response = await http.get(url);
     Map<String, dynamic> jsonData = jsonDecode(response.body);
     UpcomingMovieData data = UpcomingMovieData.fromJson(jsonData);
@@ -58,7 +59,7 @@ class MovieProvider with ChangeNotifier {
   //인기 순위
   Future<void> getPopularList() async {
     var url = Uri.parse(
-        'https://api.themoviedb.org/3/movie/popular?api_key=6253d9838a1066479c2287df95aeb78e&language=ko-KR&page=$_upcomingPageKey&region=KR');
+        'https://api.themoviedb.org/3/movie/popular?api_key=${FlutterConfig.get('API_KEY')}&language=ko-KR&page=$_upcomingPageKey&region=KR');
     var response = await http.get(url);
     Map<String, dynamic> jsonData = jsonDecode(response.body);
     PopularMovieData data = PopularMovieData.fromJson(jsonData);
@@ -74,7 +75,7 @@ class MovieProvider with ChangeNotifier {
   //높은 평점 순위
   Future<void> getTopRatedList() async {
     var url = Uri.parse(
-        'https://api.themoviedb.org/3/movie/top_rated?api_key=6253d9838a1066479c2287df95aeb78e&language=ko-KR&page=$_topRatedPageKey&region=KR');
+        'https://api.themoviedb.org/3/movie/top_rated?api_key=${FlutterConfig.get('API_KEY')}&language=ko-KR&page=$_topRatedPageKey&region=KR');
     var response = await http.get(url);
     Map<String, dynamic> jsonData = jsonDecode(response.body);
     TopRatedMovieData data = TopRatedMovieData.fromJson(jsonData);

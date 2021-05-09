@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_config/flutter_config.dart';
 import 'package:flutter_movie/providers/movie_provider.dart';
 import 'package:flutter_movie/screens/movie/detail_screen.dart';
 import 'package:flutter_movie/screens/movie/list_screen.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await FlutterConfig.loadEnvVariables();
   runApp(MyApp());
 }
 

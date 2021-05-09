@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_config/flutter_config.dart';
 import 'package:flutter_movie/components/shared/rating.dart';
 import 'package:flutter_movie/components/shared/tag.dart';
 import 'package:flutter_movie/components/text/Genre_text.dart';
@@ -43,7 +44,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   Future<void> getMovieById(String id) async {
     var url = Uri.parse(
-        'https://api.themoviedb.org/3/movie/$id?api_key=6253d9838a1066479c2287df95aeb78e&language=ko-KR');
+        'https://api.themoviedb.org/3/movie/$id?api_key=${FlutterConfig.get('API_KEY')}&language=ko-KR');
     var response = await http.get(url);
     Map<String, dynamic> jsonData = jsonDecode(response.body);
     IdMovieData data = IdMovieData.fromJson(jsonData);
@@ -54,7 +55,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   Future<void> getReviewsById(String id) async {
     var url = Uri.parse(
-        'https://api.themoviedb.org/3/movie/$id/reviews?api_key=6253d9838a1066479c2287df95aeb78e&language=ko-KR');
+        'https://api.themoviedb.org/3/movie/$id/reviews?api_key=${FlutterConfig.get('API_KEY')}&language=ko-KR');
     var response = await http.get(url);
     var responseBody = jsonDecode(response.body);
     var data = responseBody;
