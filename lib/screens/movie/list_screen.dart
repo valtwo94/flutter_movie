@@ -8,11 +8,13 @@ import 'package:flutter_movie/model/dto/now_playing_movie_data.dart';
 import 'package:flutter_movie/model/dto/popular_movie_data.dart';
 import 'package:flutter_movie/model/dto/top_rated_movie_data.dart';
 import 'package:flutter_movie/model/dto/upcoming_movie_data.dart';
+import 'package:flutter_movie/model/results.dart';
 import 'package:flutter_movie/providers/list_screen.dart';
 import 'package:flutter_movie/screens/movie/detail_screen.dart';
 import 'package:flutter_movie/utils/shadow.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 
 class MovieListScreen extends StatefulWidget {
@@ -23,21 +25,34 @@ class MovieListScreen extends StatefulWidget {
 }
 
 class _MovieListScreenState extends State<MovieListScreen> {
-  NowPlayingMovieData _nowPlayingMovieData;
+  // NowPlayingMovieData _nowPlayingMovieData;
+  List<Results> _nowPlayingList;
   UpcomingMovieData _upcomingMovieData;
   PopularMovieData _popularMovieData;
   TopRatedMovieData _topRatedMovieData;
-  bool isLoading = true;
+  bool _isLoading = true;
+  ScrollController _nowPlayingController = ScrollController();
+  int _pageKey = 1;
+  int _pageSize;
 
   Future<void> getNowPlayingLists() async {
     var url = Uri.parse(
-        'https://api.themoviedb.org/3/movie/now_playing?api_key=6253d9838a1066479c2287df95aeb78e&language=ko-KR&page=1&region=KR');
+        'https://api.themoviedb.org/3/movie/now_playing?api_key=6253d9838a1066479c2287df95aeb78e&language=ko-KR&page=$_pageKey&region=KR');
     var response = await http.get(url);
     Map<String, dynamic> jsonData = jsonDecode(response.body);
     NowPlayingMovieData data = NowPlayingMovieData.fromJson(jsonData);
-    setState(() {
-      _nowPlayingMovieData = data;
-    });
+    final List<Results> list = data.results;
+    if (_pageKey == 1) {
+      setState(() {
+        _nowPlayingList = list;
+        _pageSize = data.totalPages;
+      });
+    } else {
+      setState(() {
+        _nowPlayingList..addAll(list);
+      });
+    }
+    print(_nowPlayingList.length);
   }
 
   Future<void> getUpcomingLists() async {
@@ -76,16 +91,32 @@ class _MovieListScreenState extends State<MovieListScreen> {
   @override
   void initState() {
     super.initState();
-
     Future.delayed(Duration.zero, () async {
       await getNowPlayingLists();
       await getUpcomingLists();
       await getPopularList();
       await getTopRatedList();
       setState(() {
-        isLoading = false;
+        _isLoading = false;
       });
     });
+    _nowPlayingController.addListener(() {
+      if (_nowPlayingController.position.pixels ==
+          _nowPlayingController.position.maxScrollExtent) {
+        if (_pageKey < _pageSize) {
+          setState(() {
+            _pageKey++;
+          });
+          getNowPlayingLists();
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _nowPlayingController.dispose();
+    super.dispose();
   }
 
   @override
@@ -93,7 +124,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
     final listScreenProvider =
         Provider.of<ListScreenProvider>(context, listen: true);
     return Scaffold(
-      body: isLoading
+      body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
@@ -116,15 +147,15 @@ class _MovieListScreenState extends State<MovieListScreen> {
                         Container(
                           height: 252,
                           child: ListView.builder(
+                              controller: _nowPlayingController,
                               shrinkWrap: true,
                               scrollDirection: Axis.horizontal,
-                              itemCount: _nowPlayingMovieData.results.length,
+                              itemCount: _nowPlayingList.length,
                               itemBuilder: (context, index) {
                                 return GestureDetector(
                                   onTap: () {
                                     listScreenProvider.selectedMovieId =
-                                        _nowPlayingMovieData.results[index].id
-                                            .toString();
+                                        _nowPlayingList[index].id.toString();
                                     Navigator.pushNamed(
                                         context, MovieDetailScreen.id);
                                   },
@@ -144,16 +175,14 @@ class _MovieListScreenState extends State<MovieListScreen> {
                                               image: DecorationImage(
                                                   image: NetworkImage(
                                                       'https://image.tmdb.org/t/p/w500/' +
-                                                          _nowPlayingMovieData
-                                                              .results[index]
+                                                          _nowPlayingList[index]
                                                               .posterPath))),
                                         ),
                                         SizedBox(
                                           height: 4,
                                         ),
                                         Text(
-                                          _nowPlayingMovieData
-                                              .results[index].title,
+                                          _nowPlayingList[index].title,
                                           overflow: TextOverflow.ellipsis,
                                           style: GoogleFonts.notoSans(
                                               fontSize: 12),
@@ -162,8 +191,8 @@ class _MovieListScreenState extends State<MovieListScreen> {
                                           height: 4,
                                         ),
                                         Rating(
-                                          rating: _nowPlayingMovieData
-                                              .results[index].voteAverage
+                                          rating: _nowPlayingList[index]
+                                              .voteAverage
                                               .toDouble(),
                                           size: 10,
                                         )

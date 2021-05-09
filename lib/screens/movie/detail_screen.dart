@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_movie/components/list/movie_list.dart';
 import 'package:flutter_movie/components/shared/rating.dart';
 import 'package:flutter_movie/components/shared/tag.dart';
 import 'package:flutter_movie/components/text/Genre_text.dart';
 import 'package:flutter_movie/components/text/date_text.dart';
 import 'package:flutter_movie/components/text/title_text.dart';
+import 'package:flutter_movie/components/text/vore_average_text.dart';
+import 'package:flutter_movie/model/dto/id_movie_data.dart';
 import 'package:flutter_movie/providers/list_screen.dart';
 import 'package:flutter_movie/utils/dummy.dart';
 import 'package:flutter_movie/utils/shadow.dart';
@@ -22,7 +23,7 @@ class MovieDetailScreen extends StatefulWidget {
 }
 
 class _MovieDetailScreenState extends State<MovieDetailScreen> {
-  var selectedMovie;
+  IdMovieData selectedMovie;
   var reviews;
   bool isLoading = true;
 
@@ -33,7 +34,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           Provider.of<ListScreenProvider>(context, listen: false)
               .selectedMovieId;
       await getMovieById(selectedMovieId);
-      await getReviewsById(selectedMovieId);
+      // await getReviewsById(selectedMovieId);
       setState(() {
         isLoading = false;
       });
@@ -45,12 +46,11 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     var url = Uri.parse(
         'https://api.themoviedb.org/3/movie/$id?api_key=6253d9838a1066479c2287df95aeb78e&language=ko-KR');
     var response = await http.get(url);
-    var responseBody = jsonDecode(response.body);
-    var data = responseBody;
+    Map<String, dynamic> jsonData = jsonDecode(response.body);
+    IdMovieData data = IdMovieData.fromJson(jsonData);
     setState(() {
       selectedMovie = data;
     });
-    print(selectedMovie);
   }
 
   Future<void> getReviewsById(String id) async {
@@ -62,7 +62,6 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     setState(() {
       reviews = data;
     });
-    print(reviews);
   }
 
   @override
@@ -91,7 +90,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                                 BlendMode.darken),
                             image: NetworkImage(
                                 'https://image.tmdb.org/t/p/w500/' +
-                                    selectedMovie['backdrop_path']))),
+                                    selectedMovie.backdropPath))),
                   ),
                   Container(
                     width: double.infinity,
@@ -117,7 +116,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         ),
                         Container(
                           child: Text(
-                            '${selectedMovie['overview']}',
+                            '${selectedMovie.overview}',
                             maxLines: 7,
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.notoSans(
@@ -177,65 +176,61 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         SizedBox(
                           height: 16,
                         ),
-                        reviews['results'].length != 0 ??
-                            GridView.builder(
-                                padding: EdgeInsets.zero,
-                                shrinkWrap: true,
-                                itemCount: reviews['results'].length,
-                                primary: false,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 1,
-                                  mainAxisSpacing: 16,
-                                  childAspectRatio: 288 / 71,
-                                ),
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    padding: EdgeInsets.all(8),
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 1, vertical: 2),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(8),
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color:
-                                                  Color.fromRGBO(0, 0, 0, 0.25),
-                                              blurRadius: 4)
-                                        ]),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                        GridView.builder(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            itemCount: 3,
+                            primary: false,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 1,
+                              mainAxisSpacing: 16,
+                              childAspectRatio: 288 / 71,
+                            ),
+                            itemBuilder: (context, index) {
+                              return Container(
+                                padding: EdgeInsets.all(8),
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 1, vertical: 2),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Color.fromRGBO(0, 0, 0, 0.25),
+                                          blurRadius: 4)
+                                    ]),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '$dummyReview',
+                                      style: GoogleFonts.notoSans(
+                                        height: 1.7,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color.fromRGBO(97, 97, 97, 1),
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         Text(
-                                          '${reviews['results']['author']['username']}',
+                                          '유저이름',
                                           style: GoogleFonts.notoSans(
-                                            height: 1.7,
-                                            fontSize: 12,
                                             fontWeight: FontWeight.w400,
-                                            color:
-                                                Color.fromRGBO(97, 97, 97, 1),
+                                            fontSize: 10,
+                                            color: Color.fromRGBO(
+                                                161, 161, 161, 1),
                                           ),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                              '유저이름',
-                                              style: GoogleFonts.notoSans(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 10,
-                                                color: Color.fromRGBO(
-                                                    161, 161, 161, 1),
-                                              ),
-                                            )
-                                          ],
                                         )
                                       ],
-                                    ),
-                                  );
-                                })
+                                    )
+                                  ],
+                                ),
+                              );
+                            })
                       ],
                     ),
                   ),
@@ -260,7 +255,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                                 image: DecorationImage(
                                     image: NetworkImage(
                                         'https://image.tmdb.org/t/p/w500/' +
-                                            selectedMovie['poster_path']))),
+                                            selectedMovie.posterPath))),
                           ),
                           SizedBox(
                             width: 16,
@@ -270,7 +265,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               TitleText(
-                                title: '${selectedMovie['genres'][0]['name']}',
+                                title: '${selectedMovie.title}',
                                 size: 12,
                               ),
                               SizedBox(
@@ -283,11 +278,11 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                                 height: 4,
                               ),
                               GenreText(
-                                text: '${selectedMovie['genres'][0]['name']}',
+                                text: '${selectedMovie.genres[0].name}',
                                 size: 11,
                               ),
                               DateText(
-                                text: '${selectedMovie['release_date']} 발매',
+                                text: '${selectedMovie.releaseDate} 발매',
                                 size: 11,
                               ),
                               SizedBox(
@@ -297,14 +292,14 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Rating(
-                                    rating: selectedMovie['vote_average'],
+                                    rating: selectedMovie.voteAverage,
                                     size: 15,
                                   ),
                                   SizedBox(
                                     width: 5,
                                   ),
                                   VoteAverageText(
-                                      text: '${selectedMovie['vote_average']}')
+                                      text: '${selectedMovie.voteAverage}')
                                 ],
                               )
                             ],
@@ -316,24 +311,6 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 ],
               ),
             ),
-    );
-  }
-}
-
-class VoteAverageText extends StatelessWidget {
-  const VoteAverageText({
-    Key key,
-    this.text: '',
-  }) : super(key: key);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: GoogleFonts.notoSans(
-          color: Colors.amber, fontSize: 12, fontWeight: FontWeight.w700),
     );
   }
 }

@@ -6,6 +6,7 @@ import 'package:flutter_movie/components/text/title_text.dart';
 import 'package:flutter_movie/model/dto/now_playing_movie_data.dart';
 import 'package:flutter_movie/model/results.dart';
 import 'package:flutter_movie/providers/list_screen.dart';
+import 'package:flutter_movie/screens/movie/detail_screen.dart';
 import 'package:flutter_movie/utils/shadow.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -44,6 +45,7 @@ class MovieList extends StatelessWidget {
                   onTap: () {
                     movieListProvider.selectedMovieId =
                         results[index].id.toString();
+                    Navigator.pushNamed(context, MovieDetailScreen.id);
                   },
                   child: Container(
                     height: 69,
