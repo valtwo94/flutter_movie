@@ -5,7 +5,7 @@ import 'package:flutter_movie/components/text/genre_text.dart';
 import 'package:flutter_movie/components/text/title_text.dart';
 import 'package:flutter_movie/model/dto/now_playing_movie_data.dart';
 import 'package:flutter_movie/model/results.dart';
-import 'package:flutter_movie/providers/list_screen.dart';
+import 'package:flutter_movie/providers/movie_provider.dart';
 import 'package:flutter_movie/screens/movie/detail_screen.dart';
 import 'package:flutter_movie/utils/shadow.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -26,8 +26,7 @@ class MovieList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final movieListProvider =
-        Provider.of<ListScreenProvider>(context, listen: true);
+    final movieProvider = Provider.of<MovieProvider>(context, listen: true);
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,8 +42,8 @@ class MovieList extends StatelessWidget {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
-                    movieListProvider.selectedMovieId =
-                        results[index].id.toString();
+                    movieProvider.selectedMovieId =
+                        results[index]?.id.toString();
                     Navigator.pushNamed(context, MovieDetailScreen.id);
                   },
                   child: Container(
@@ -61,7 +60,7 @@ class MovieList extends StatelessWidget {
                               image: DecorationImage(
                                   image: NetworkImage(
                                       'https://image.tmdb.org/t/p/w500/' +
-                                          results[index].posterPath))),
+                                          results[index]?.posterPath))),
                         ),
                         SizedBox(
                           width: 16,
@@ -71,7 +70,7 @@ class MovieList extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${results[index].title}',
+                              '${results[index]?.title}',
                               style: GoogleFonts.notoSans(
                                   fontSize: 10, fontWeight: FontWeight.w500),
                             ),

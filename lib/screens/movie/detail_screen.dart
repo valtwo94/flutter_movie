@@ -8,7 +8,7 @@ import 'package:flutter_movie/components/text/date_text.dart';
 import 'package:flutter_movie/components/text/title_text.dart';
 import 'package:flutter_movie/components/text/vore_average_text.dart';
 import 'package:flutter_movie/model/dto/id_movie_data.dart';
-import 'package:flutter_movie/providers/list_screen.dart';
+import 'package:flutter_movie/providers/movie_provider.dart';
 import 'package:flutter_movie/utils/dummy.dart';
 import 'package:flutter_movie/utils/shadow.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -31,8 +31,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   void initState() {
     Future.delayed(Duration.zero, () async {
       final selectedMovieId =
-          Provider.of<ListScreenProvider>(context, listen: false)
-              .selectedMovieId;
+          Provider.of<MovieProvider>(context, listen: false).selectedMovieId;
       await getMovieById(selectedMovieId);
       // await getReviewsById(selectedMovieId);
       setState(() {
@@ -68,6 +67,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
+      extendBody: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
@@ -77,12 +77,12 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
               child: CircularProgressIndicator(),
             )
           : SingleChildScrollView(
+              padding: EdgeInsets.zero,
               scrollDirection: Axis.vertical,
               child: Stack(
                 children: [
                   Container(
-                    width: double.infinity,
-                    height: 297,
+                    height: 350,
                     decoration: BoxDecoration(
                         image: DecorationImage(
                             colorFilter: ColorFilter.mode(
@@ -90,7 +90,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                                 BlendMode.darken),
                             image: NetworkImage(
                                 'https://image.tmdb.org/t/p/w500/' +
-                                    selectedMovie.backdropPath))),
+                                    selectedMovie.backdropPath),
+                            fit: BoxFit.cover)),
                   ),
                   Container(
                     width: double.infinity,
