@@ -9,6 +9,7 @@ import 'package:flutter_movie/components/text/date_text.dart';
 import 'package:flutter_movie/components/text/title_text.dart';
 import 'package:flutter_movie/components/text/vore_average_text.dart';
 import 'package:flutter_movie/model/dto/id_movie_data.dart';
+import 'package:flutter_movie/model/dto/movie_reviews_data.dart';
 import 'package:flutter_movie/providers/movie_provider.dart';
 import 'package:flutter_movie/utils/dummy.dart';
 import 'package:flutter_movie/utils/shadow.dart';
@@ -25,6 +26,7 @@ class MovieDetailScreen extends StatefulWidget {
 
 class _MovieDetailScreenState extends State<MovieDetailScreen> {
   IdMovieData selectedMovie;
+  MovieReviewsData movieReviewsData;
   var reviews;
   bool isLoading = true;
 
@@ -34,7 +36,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
       final selectedMovieId =
           Provider.of<MovieProvider>(context, listen: false).selectedMovieId;
       await getMovieById(selectedMovieId);
-      // await getReviewsById(selectedMovieId);
+      await getReviewsById(selectedMovieId);
       setState(() {
         isLoading = false;
       });
@@ -57,10 +59,11 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     var url = Uri.parse(
         'https://api.themoviedb.org/3/movie/$id/reviews?api_key=${FlutterConfig.get('API_KEY')}&language=ko-KR');
     var response = await http.get(url);
-    var responseBody = jsonDecode(response.body);
-    var data = responseBody;
+    Map<String, dynamic> jsonData = jsonDecode(response.body);
+    MovieReviewsData data = MovieReviewsData.fromJson(jsonData);
+    print(data.results);
     setState(() {
-      reviews = data;
+      movieReviewsData = data;
     });
   }
 
@@ -181,7 +184,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         GridView.builder(
                             padding: EdgeInsets.zero,
                             shrinkWrap: true,
-                            itemCount: 3,
+                            itemCount: movieReviewsData.results.length,
                             primary: false,
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
@@ -207,7 +210,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      '$dummyReview',
+                                      '${movieReviewsData.results[index].content}',
                                       style: GoogleFonts.notoSans(
                                         height: 1.7,
                                         fontSize: 12,
@@ -219,7 +222,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         Text(
-                                          '유저이름',
+                                          '${movieReviewsData.results[index].author}',
                                           style: GoogleFonts.notoSans(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 10,
