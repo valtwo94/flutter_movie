@@ -184,7 +184,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         GridView.builder(
                             padding: EdgeInsets.zero,
                             shrinkWrap: true,
-                            itemCount: movieReviewsData.results.length,
+                            itemCount: 3,
                             primary: false,
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
@@ -210,7 +210,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      '${movieReviewsData.results[index].content}',
+                                      '$dummyReview',
                                       style: GoogleFonts.notoSans(
                                         height: 1.7,
                                         fontSize: 12,
@@ -222,7 +222,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         Text(
-                                          '${movieReviewsData.results[index].author}',
+                                          '유저이름',
                                           style: GoogleFonts.notoSans(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 10,
