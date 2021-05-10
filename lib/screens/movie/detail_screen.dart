@@ -281,9 +281,13 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                               SizedBox(
                                 height: 4,
                               ),
-                              GenreText(
-                                text: '${selectedMovie.genres[0].name}',
-                                size: 11,
+                              Row(
+                                children: selectedMovie.genres
+                                    .map<Widget>((genre) => GenreText(
+                                          text: '${genre.name}',
+                                          size: 11,
+                                        ))
+                                    .toList(),
                               ),
                               DateText(
                                 text: '${selectedMovie.releaseDate} 발매',
