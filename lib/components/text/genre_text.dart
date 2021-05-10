@@ -13,12 +13,15 @@ class GenreText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: GoogleFonts.notoSans(
-          fontWeight: FontWeight.w400,
-          fontSize: size,
-          color: Color.fromRGBO(154, 154, 154, 1)),
+    return Padding(
+      padding: const EdgeInsets.only(right: 2.0),
+      child: Text(
+        text,
+        style: GoogleFonts.notoSans(
+            fontWeight: FontWeight.w400,
+            fontSize: size,
+            color: Color.fromRGBO(154, 154, 154, 1)),
+      ),
     );
   }
 }

@@ -273,9 +273,11 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                               SizedBox(
                                 height: 4,
                               ),
-                              Tag(
-                                text: 'Adult',
-                              ),
+                              selectedMovie.adult == true
+                                  ? Tag(
+                                      text: 'Adult',
+                                    )
+                                  : Container(),
                               SizedBox(
                                 height: 4,
                               ),

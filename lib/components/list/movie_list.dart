@@ -87,10 +87,19 @@ class MovieList extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  GenreText(
-                                    text: '장르',
+                                  Row(
+                                    children: results[index]
+                                        .genreIds
+                                        .map<Widget>(
+                                          (id) => GenreText(
+                                            text: '$id',
+                                          ),
+                                        )
+                                        .toList(),
                                   ),
-                                  DateText(),
+                                  DateText(
+                                    text: results[index].releaseDate,
+                                  ),
                                 ],
                               ),
                             )
